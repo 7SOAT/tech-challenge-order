@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import RouteModule from './api/route.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MicroserviceModule } from './microservice/microservice.module';
 import RepositoryModule from './externals/repositories/repository.module';
-import OrderController from './adapters/controllers/order.controller';
+import ControllersModule from './adapters/controllers/controllers.module';
 import OrderRoute from './api/order/order.route';
 
 @Module({
@@ -18,18 +19,14 @@ import OrderRoute from './api/order/order.route';
       }),
       inject: [ConfigService],
     }),
-    RepositoryModule.register({
-      imports: [],
-      providers: [],
-      controllers: [],
-      exports: [],
-    }),
+    RepositoryModule,
     RouteModule.register({
-      imports: [RepositoryModule.register({})],
-      providers: [OrderController],
+      imports: [ControllersModule],
+      providers: [],
       controllers: [OrderRoute],
       exports: [],
     }),
+    MicroserviceModule,
   ],
   controllers: [],
   providers: [],

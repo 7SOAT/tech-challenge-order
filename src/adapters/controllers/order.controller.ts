@@ -1,20 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import OrderRepository from 'src/externals/repositories/order.repository';
+import CreateOrderDto from 'src/api/dto/order/create-order.dto';
+import OrderUseCase from 'src/core/usecases/order.usecase';
+import { MicroserviceService } from 'src/microservice/microservice.service';
 
 @Injectable()
 export default class OrderController {
-  constructor(private readonly orderRepository: OrderRepository) {}
+  constructor(
+    private readonly orderUserCase: OrderUseCase,
+    private readonly mircroservice: MicroserviceService,
+  ) {}
 
-  async createOrder() {
-    return await this.orderRepository.createOrder();
+  async createOrder(dto: CreateOrderDto) {
+    console.log('dto', dto);
   }
 
-  getOrder() {
-    // implementation
+  async getOrder(id: string) {
+    console.log('id', id);
   }
 
   async getAllOrders() {
-    // implementation
-    return await this.orderRepository.getAllOrders();
+    // const response = await this.mircroservice.getAllProducts();
+    const response = await this.mircroservice.getCustomerById();
+    console.log('response', response);
+    return await this.orderUserCase.getAll();
   }
 }
