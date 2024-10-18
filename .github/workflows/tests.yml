@@ -25,7 +25,19 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Check for test files
+        id: check-tests
+        run: |
+          if [ -z "$(find . -name '*.test.js' -o -name '*.spec.js')" ]; then
+            echo "No test files found."
+            echo "run_tests=false" >> $GITHUB_ENV
+          else
+            echo "Test files found."
+            echo "run_tests=true" >> $GITHUB_ENV
+          fi
+
       - name: Run tests
+        if: ${{ env.run_tests == 'true' }}
         run: yarn test
 
       - name: Run lint
