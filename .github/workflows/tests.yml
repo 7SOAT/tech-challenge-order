@@ -37,8 +37,8 @@ jobs:
           fi
 
       - name: Run tests
-        if: ${{ env.run_tests == 'true' }}
-        run: yarn test
+        if: env.run_tests == 'true'
+        run: yarn test -- --passWithNoTests
 
       - name: Run lint
         run: yarn lint
