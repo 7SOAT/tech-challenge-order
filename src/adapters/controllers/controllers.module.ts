@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import OrderController from './order.controller';
-import CoreModule from 'src/core/core.module';
+import { CoreModule } from 'src/core/core.module';
 import { MicroserviceModule } from 'src/microservice/microservice.module';
+import { OrderController } from './order.controller';
 
 @Module({
   imports: [CoreModule, MicroserviceModule],
@@ -9,4 +9,4 @@ import { MicroserviceModule } from 'src/microservice/microservice.module';
   providers: [OrderController],
   exports: [OrderController],
 })
-export default class ControllersModule {}
+export class ControllersModule {}

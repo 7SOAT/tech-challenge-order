@@ -8,12 +8,12 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import OrderController from 'src/adapters/controllers/order.controller';
-import CreateOrderDto from '../dto/order/create-order.dto';
+import { OrderController } from 'src/adapters/controllers/order.controller';
+import { CreateOrderDto } from '../dto/order/create-order.dto';
 
 @ApiTags('orders')
 @Controller('orders')
-export default class OrderRoute {
+export class OrderRoute {
   constructor(private readonly _orderController: OrderController) {}
 
   @Post()

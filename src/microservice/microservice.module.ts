@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common';
-import { MicroserviceService } from './microservice.service';
+import { MicroServiceService } from './microservice.service';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HttpModule],
-  providers: [MicroserviceService],
-  exports: [MicroserviceService],
+  imports: [
+    HttpModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
+  ],
+  providers: [MicroServiceService],
+  exports: [MicroServiceService],
 })
 export class MicroserviceModule {}

@@ -3,7 +3,7 @@ import { ModuleConfig } from 'src/core/type/module.config';
 
 @Global()
 @Module({})
-export default class RepositoryModule {
+export class RepositoryModule {
   static register(config: ModuleConfig): DynamicModule {
     return {
       module: RepositoryModule,

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import GatewayModule from 'src/adapters/gateways/gateway.module';
-import OrderUseCase from './usecases/order.usecase';
+import { OrderUseCase } from './usecases/order.usecase';
+import { GatewayModule } from 'src/adapters/gateways/gateway.module';
 
 @Module({
   imports: [GatewayModule],
@@ -8,4 +8,4 @@ import OrderUseCase from './usecases/order.usecase';
   providers: [OrderUseCase],
   exports: [OrderUseCase],
 })
-export default class CoreModule {}
+export class CoreModule {}

@@ -1,27 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import CreateOrderDto from 'src/api/dto/order/create-order.dto';
-import OrderUseCase from 'src/core/usecases/order.usecase';
-import { MicroserviceService } from 'src/microservice/microservice.service';
+import { CreateOrderDto } from 'src/api/dto/order/create-order.dto';
+import { OrderUseCase } from 'src/core/usecases/order.usecase';
+import { MicroServiceService } from 'src/microservice/microservice.service';
 
 @Injectable()
-export default class OrderController {
+export class OrderController {
   constructor(
     private readonly orderUserCase: OrderUseCase,
-    private readonly mircroservice: MicroserviceService,
+    private readonly mircroService: MicroServiceService,
   ) {}
 
-  async createOrder(dto: CreateOrderDto) {
-    console.log('dto', dto);
+  async createOrder({ customerId, productIds }: CreateOrderDto) {
+    const responseCustomer = await this.mircroService.getCustomerByDocument(
+      '',
+      '',
+    );
+    const responseProducts = [];
+
+    for (const productId of productIds) {
+      responseProducts.push(
+        await this.mircroService.getProductsById(productId),
+      );
+    }
+    return await this.orderUserCase.create(responseCustomer, responseProducts);
   }
 
   async getOrder(id: string) {
-    console.log('id', id);
+    return await this.orderUserCase.getOrderById(id);
   }
 
   async getAllOrders() {
-    // const response = await this.mircroservice.getAllProducts();
-    const response = await this.mircroservice.getCustomerById();
-    console.log('response', response);
     return await this.orderUserCase.getAll();
   }
 }
