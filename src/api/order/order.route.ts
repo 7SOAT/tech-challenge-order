@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { OrderController } from 'src/adapters/controllers/order.controller';
+import { OrderController } from '../../adapters/controllers/order.controller';
 import { CreateOrderDto } from '../dto/order/create-order.dto';
 
 @ApiTags('orders')

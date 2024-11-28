@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { OrderRepository } from 'src/externals/repositories/order.repository';
-import { CustomerResponseDto } from 'src/microservice/dto/customer-response.dto';
+import { OrderRepository } from '../../../externals/repositories/order.repository';
+import { CustomerResponseDto } from '../../../microservice/dto/customer-response.dto';
 
 @Injectable()
 export class OrderGateway {

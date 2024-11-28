@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { OrderGateway } from 'src/adapters/gateways/order/order.gateway';
-import { CustomerResponseDto } from 'src/microservice/dto/customer-response.dto';
+import { OrderGateway } from '../../adapters/gateways/order/order.gateway';
+import { CustomerResponseDto } from '../../microservice/dto/customer-response.dto';
 
 @Injectable()
 export class OrderUseCase {
