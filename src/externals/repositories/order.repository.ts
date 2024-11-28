@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { OrderDocument } from '../schemas/order.schema';
+import { CustomerResponseDto } from 'src/microservice/dto/customer-response.dto';
 
 @Injectable()
 export class OrderRepository {
@@ -10,7 +11,7 @@ export class OrderRepository {
     private readonly orderSchema: Model<OrderDocument>,
   ) {}
 
-  async createOrder(customer: any, products: any) {
+  async createOrder(customer: CustomerResponseDto, products: any) {
     const totalValue = parseFloat(
       products
         .reduce((a, b) => a + parseFloat(b.price.toString()), 0)
@@ -31,7 +32,7 @@ export class OrderRepository {
   }
 
   async getOrder(id: string) {
-    return await this.orderSchema.findById({ _id: id });
+    return await this.orderSchema.findOne({ _id: id });
   }
 
   async getAllOrders() {

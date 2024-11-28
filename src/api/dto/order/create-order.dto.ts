@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 import { UUID } from 'crypto';
 
 export class CreateOrderDto {
@@ -12,8 +19,22 @@ export class CreateOrderDto {
   })
   productIds: Array<UUID>;
 
-  @IsString()
   @IsOptional()
-  @ApiProperty({ type: 'string', description: 'Order Customer ID' })
-  customerId: UUID;
+  @IsString({ message: 'Customer CPF should be a string' })
+  @IsNotEmpty({ message: 'Customer CPF should be not empty' })
+  @Matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, {
+    message: 'CPF must be in format XXX.XXX.XXX-XX',
+  })
+  @ApiProperty({ type: 'string', description: 'Customer CPF', required: false })
+  document: string;
+
+  @IsOptional()
+  @IsString({ message: 'Customer e-mail should be a string' })
+  @IsEmail(undefined, { message: 'Customer e-mail should be valid' })
+  @ApiProperty({
+    type: 'string',
+    description: 'Customer e-mail',
+    required: false,
+  })
+  email: string;
 }

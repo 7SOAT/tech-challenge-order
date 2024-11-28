@@ -26,6 +26,8 @@ export class OrderRoute {
     try {
       const order = await this._orderController.getOrder(id);
 
+      if (!order) throw new NotFoundException(`Order with id ${id} not found`);
+
       return order;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -37,7 +39,7 @@ export class OrderRoute {
     try {
       const order = await this._orderController.getAllOrders();
 
-      if (!order) return new NotFoundException(`No orders found`);
+      if (!order) throw new NotFoundException(`No orders found`);
 
       return order;
     } catch (error) {
