@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { OrderGateway } from '../../adapters/gateways/order/order.gateway';
-import { CustomerResponseDto } from '../../microservice/dto/customer-response.dto';
 
 @Injectable()
 export class OrderUseCase {
@@ -10,7 +9,7 @@ export class OrderUseCase {
 
   constructor(private readonly orderGateway: OrderGateway) {}
 
-  async create(customer: CustomerResponseDto, products: any) {
+  async create(customer: any, products: any) {
     return await this.orderGateway.create(customer, products);
   }
 

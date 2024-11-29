@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { OrderRepository } from '../../../externals/repositories/order.repository';
-import { CustomerResponseDto } from '../../../microservice/dto/customer-response.dto';
 
 @Injectable()
 export class OrderGateway {
   constructor(private _orderRepository: OrderRepository) {}
 
-  async create(customer: CustomerResponseDto, products: any) {
+  async create(customer: string, products: any) {
     try {
       const result = await this._orderRepository.createOrder(
         customer,

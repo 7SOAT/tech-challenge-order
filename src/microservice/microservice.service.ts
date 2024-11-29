@@ -1,8 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { lastValueFrom } from 'rxjs';
-import { CustomerResponseDto } from './dto/customer-response.dto';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { ProductsResponseDto } from './dto/product-response.dto';
 
 @Injectable()
@@ -40,19 +39,13 @@ export class MicroServiceService {
     }
   }
 
-  async getCustomerByDocument(
-    document: string,
-    email: string,
-  ): Promise<CustomerResponseDto> {
+  async getCustomerByDocument(document: string) {
     try {
-      const URL_CUSTOMERS_BY_DOCUMENT = `${this.configService.get<string>('API_MONOLITH_HOST')}/customers/by-params`;
+      const URL_CUSTOMERS_BY_DOCUMENT = `${this.configService.get<string>('LAMBDA_FUNCTION_HOST')}`;
 
-      const { data } = await lastValueFrom(
-        this.httpService.get<CustomerResponseDto>(URL_CUSTOMERS_BY_DOCUMENT, {
-          params: {
-            cpf: document,
-            email: email,
-          },
+      const { data } = await firstValueFrom(
+        this.httpService.post<{ token: any }>(URL_CUSTOMERS_BY_DOCUMENT, {
+          cpf: document,
         }),
       );
 
@@ -61,7 +54,6 @@ export class MicroServiceService {
         throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
       }
 
-      this.logger.log(`Customer found: ${JSON.stringify(data)}`);
       return data;
     } catch (error) {
       this.logger.error(
@@ -74,15 +66,24 @@ export class MicroServiceService {
     }
   }
 
-  async getProductsById(id: string): Promise<ProductsResponseDto> {
+  async getProductsById(
+    id: string,
+    token: string,
+  ): Promise<ProductsResponseDto> {
     try {
-      const URL_GET_PROJECT_BY_ID = `${this.configService.get<string>('API_MONOLITH_HOST')}/products/${id}`;
-      const { data } = await lastValueFrom(
-        this.httpService.get<ProductsResponseDto>(URL_GET_PROJECT_BY_ID),
+      const URL_GET_PROJECT_BY_ID = `${this.configService.get<string>('API_ADMIN_HOST')}/products/${id}`;
+
+      const { data } = await firstValueFrom(
+        this.httpService.get<ProductsResponseDto>(URL_GET_PROJECT_BY_ID, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }),
       );
 
       if (!data) {
-        this.logger.error(`Product not found`);
+        this.logger.error(`Product with id: ${id} not found`);
         throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
       }
 
