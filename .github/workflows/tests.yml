@@ -13,6 +13,17 @@ jobs:
       matrix:
         node-version: [18.x, 21.x]
 
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,6 +49,8 @@ jobs:
 
       - name: Run tests
         if: env.run_tests == 'true'
+        env:
+          MONGODB_URI_TEST: mongodb://localhost/order-db-test
         run: yarn test -- --passWithNoTests
 
       - name: Run lint
