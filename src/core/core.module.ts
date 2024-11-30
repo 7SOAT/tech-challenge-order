@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { OrderUseCase } from './usecases/order.usecase';
-import { GatewayModule } from 'src/adapters/gateways/gateway.module';
+import { GatewayModule } from '../adapters/gateways/gateway.module';
 
 @Module({
   imports: [GatewayModule],

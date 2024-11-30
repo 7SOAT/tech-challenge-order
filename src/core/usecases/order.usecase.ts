@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { OrderGateway } from '../../adapters/gateways/order/order.gateway';
 
 @Injectable()
@@ -17,9 +23,8 @@ export class OrderUseCase {
     try {
       const orders = await this.orderGateway.findAll();
 
-      if (!orders) {
-        this.logger.error(`No orders found`);
-        throw new HttpException('No orders found', HttpStatus.NOT_FOUND);
+      if (!orders || orders.length === 0) {
+        throw new NotFoundException('No orders found');
       }
 
       return orders;

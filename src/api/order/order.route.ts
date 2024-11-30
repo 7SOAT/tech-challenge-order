@@ -7,7 +7,12 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { OrderController } from '../../adapters/controllers/order.controller';
 import { CreateOrderDto } from '../dto/order/create-order.dto';
 
@@ -17,11 +22,15 @@ export class OrderRoute {
   constructor(private readonly _orderController: OrderController) {}
 
   @Post()
+  @ApiOkResponse({ description: 'Order created' })
+  @ApiInternalServerErrorResponse({ description: 'Failed to create order' })
   async create(@Body() dto: CreateOrderDto) {
     return await this._orderController.createOrder(dto);
   }
 
   @Get(':id')
+  @ApiOkResponse({ description: 'Order details' })
+  @ApiNotFoundResponse({ description: 'Order not found' })
   async get(@Param('id') id: string) {
     try {
       const order = await this._orderController.getOrder(id);
@@ -35,13 +44,13 @@ export class OrderRoute {
   }
 
   @Get()
+  @ApiOkResponse({ description: 'List of orders' })
+  @ApiNotFoundResponse({ description: 'No orders found' })
   async getAll() {
     try {
-      const order = await this._orderController.getAllOrders();
+      const orders = await this._orderController.getAllOrders();
 
-      if (!order) throw new NotFoundException(`No orders found`);
-
-      return order;
+      return orders;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

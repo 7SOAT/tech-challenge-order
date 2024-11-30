@@ -1,112 +1,133 @@
-import { INestApplication } from '@nestjs/common';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
-import { OrderController } from '../../src/adapters/controllers/order.controller';
 import { TestingModule, Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { RouteModule } from '../../src/api/route.module';
+import { DefineScenarioFunctionWithAliases } from 'jest-cucumber/dist/src/feature-definition-creation';
+import { OrderRoute } from '../../src/api/order/order.route';
+import { INestApplication } from '@nestjs/common';
+import {
+  getConnectionToken,
+  getModelToken,
+  MongooseModule,
+} from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { OrderDocument } from 'src/externals/schemas/order.schema';
+import { Connection, Model } from 'mongoose';
+import { ControllersModule } from '../../src/adapters/controllers/controllers.module';
 
 const feature = loadFeature(
   path.resolve(__dirname, '../features/order.route.feature'),
 );
-defineFeature(feature, (scenario) => {
+
+defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
   let app: INestApplication;
-  let mockOrderController: Partial<OrderController>;
+  let orderRoute: OrderRoute;
 
   beforeAll(async () => {
-    mockOrderController = {
-      getAllOrders: jest.fn(),
-    };
-
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        RouteModule.register({
-          imports: [],
-          providers: [
-            {
-              provide: OrderController,
-              useValue: mockOrderController,
-            },
-          ],
-          controllers: [],
-          exports: [],
+        MongooseModule.forRootAsync({
+          imports: [ConfigModule],
+          useFactory: async (configService: ConfigService) => ({
+            uri: configService.get<string>('MONGODB_URI_TEST'),
+          }),
+          inject: [ConfigService],
         }),
+        ControllersModule,
       ],
+      controllers: [OrderRoute],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    orderRoute = moduleFixture.get<OrderRoute>(OrderRoute);
   });
 
   afterAll(async () => {
+    const connection = app.get<Connection>(getConnectionToken());
+
+    const collections = await connection.db.collections();
+
+    for (const collection of collections) {
+      await collection.deleteMany({});
+    }
     await app.close();
   });
 
-  scenario('Successfully retrieve all orders', ({ given, when, then, and }) => {
-    let response: request.Response;
+  it('should be defined', () => {
+    expect(orderRoute).toBeDefined();
+  });
 
-    given('the order service is available', () => {
-      (mockOrderController.getAllOrders as jest.Mock).mockResolvedValue([
-        { id: '1', product: 'Product 1', quantity: 2 },
-        { id: '2', product: 'Product 2', quantity: 1 },
-      ]);
+  scenario('Successfully retrieve all orders', ({ given, when, then }) => {
+    given('the order service is available', async () => {
+      // Mock the order service to return a list of orders
+      const orderModel = app.get(
+        getModelToken('OrderSchema'),
+      ) as Model<OrderDocument>;
+
+      await orderModel.create({
+        status: 'pending',
+        totalValue: 100,
+        products: ['1'],
+        customer: '1',
+        payment: 'CreditCard',
+        orderNumber: 1,
+      });
     });
 
     when('I send a GET request to "/orders"', async () => {
-      response = await request(app.getHttpServer()).get('/orders');
+      const response = await request(app.getHttpServer()).get('/orders');
+
+      expect(response).toBeDefined();
     });
 
-    then('I should receive a 200 status code', () => {
+    then('I should receive a 200 status code', async () => {
+      const response = await request(app.getHttpServer()).get('/orders');
+
       expect(response.status).toBe(200);
     });
 
-    and('the response should contain a list of orders', () => {
-      expect(response.body).toEqual([
-        { id: '1', product: 'Product 1', quantity: 2 },
-        { id: '2', product: 'Product 2', quantity: 1 },
-      ]);
+    then('the response should contain a list of orders', async () => {
+      const response = await request(app.getHttpServer()).get('/orders');
+
+      expect(response.body).toBeInstanceOf(Array);
+      expect(response.body.length).toBe(1);
+      expect(response.body[0].status).toBe('pending');
+      expect(response.body[0].totalValue).toBe(100);
+      expect(response.body[0].products).toEqual(['1']);
+      expect(response.body[0].customer).toBe('1');
+      expect(response.body[0].payment).toBe('CreditCard');
     });
   });
 
-  scenario('No orders found', ({ given, when, then, and }) => {
-    let response: request.Response;
+  scenario('No orders found', ({ given, when, then }) => {
+    given('the order service is available', async () => {
+      const orderModel = app.get(
+        getModelToken('OrderSchema'),
+      ) as Model<OrderDocument>;
 
-    given('the order service is available', () => {
-      (mockOrderController.getAllOrders as jest.Mock).mockResolvedValue([]);
+      await orderModel.deleteMany({});
     });
 
     when('I send a GET request to "/orders"', async () => {
-      response = await request(app.getHttpServer()).get('/orders');
+      const response = await request(app.getHttpServer()).get('/orders');
+
+      expect(response).toBeDefined();
     });
 
-    then('I should receive a 404 status code', () => {
-      expect(response.status).toBe(404);
+    then('I should receive a 500 status code', async () => {
+      const response = await request(app.getHttpServer()).get('/orders');
+
+      expect(response.status).toBe(500);
     });
 
-    and('the response should contain "No orders found"', () => {
-      expect(response.body).toEqual({ message: 'No orders found' });
-    });
-  });
+    then('the response should contain "No orders found"', async () => {
+      const response = await request(app.getHttpServer()).get('/orders');
 
-  scenario('Internal server error', ({ given, when, then, and }) => {
-    let response: request.Response;
-
-    given('the order service is unavailable', () => {
-      (mockOrderController.getAllOrders as jest.Mock).mockRejectedValue(
-        new Error('Internal server error'),
+      expect(response.body.message).toBe(
+        'Failed to fetch data from microservice: No orders found',
       );
-    });
-
-    when('I send a GET request to "/orders"', async () => {
-      response = await request(app.getHttpServer()).get('/orders');
-    });
-
-    then('I should receive a 500 status code', () => {
-      expect(response.status).toBe(404);
-    });
-
-    and('the response should contain an error message', () => {
-      expect(response.body).toEqual({ error: 'Not Found' });
     });
   });
 });

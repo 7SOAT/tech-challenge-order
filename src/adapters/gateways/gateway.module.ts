@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { OrderRepository } from 'src/externals/repositories/order.repository';
-import { RepositoryModule } from 'src/externals/repositories/repository.module';
-import { OrderSchema } from 'src/externals/schemas/order.schema';
+import { OrderRepository } from '../../externals/repositories/order.repository';
+import { RepositoryModule } from '../../externals/repositories/repository.module';
+import { OrderSchema } from '../../externals/schemas/order.schema';
 import { OrderGateway } from './order/order.gateway';
 
 @Module({
