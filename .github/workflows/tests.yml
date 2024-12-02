@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Wait for MongoDB
+        run: sleep 15
+
       - name: Check for test files
         id: check-tests
         run: |
@@ -55,3 +58,7 @@ jobs:
 
       - name: Run lint
         run: yarn lint
+
+      - name: MongoDB Logs
+        if: failure()
+        run: docker logs ${{ job.services.mongodb.id }}
