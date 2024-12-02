@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    expose:
+      - "3001"
+    environment:
+      API_PORT: 3001
+     
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    volumes:
+      - ./src:/usr/app/src
+
+  db:
+    container_name: db
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - data:/data/db
+
+  db_test:
+    container_name: db_test
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - data:/data/db
+
+volumes:
+  data:

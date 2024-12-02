@@ -1,0 +1,64 @@
+name: CI - Run Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 21.x]
+
+    services:
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Wait for MongoDB
+        run: sleep 15
+
+      - name: Check for test files
+        id: check-tests
+        run: |
+          if [ -z "$(find . -name '*.test.js' -o -name '*.spec.js')" ]; then
+            echo "No test files found."
+            echo "run_tests=false" >> $GITHUB_ENV
+          else
+            echo "Test files found."
+            echo "run_tests=true" >> $GITHUB_ENV
+          fi
+
+      - name: Run tests
+        if: env.run_tests == 'true'
+        env:
+          MONGODB_URI_TEST: mongodb://localhost/order-db-test
+        run: yarn test -- --passWithNoTests
+
+      - name: Run lint
+        run: yarn lint
+
+      - name: MongoDB Logs
+        if: failure()
+        run: docker logs ${{ job.services.mongodb.id }}
