@@ -1,8 +1,9 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateOrderDto } from '../../api/dto/order/create-order.dto';
 import { OrderUseCase } from '../../core/usecases/order.usecase';
 import { MicroServiceService } from '../../microservice/microservice.service';
 import { JwtHelperService } from '../../package/jwt-helper/jwt-helper.service';
+import { UpdateOrderDto } from 'src/api/dto/order/update-order.dto';
 
 @Injectable()
 export class OrderController {
@@ -36,10 +37,7 @@ export class OrderController {
       this.logger.error(
         `Failed to create order: ${JSON.stringify(error.message || error)}`,
       );
-      throw new HttpException(
-        `Failed to fetch data from microservice: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 
@@ -48,6 +46,21 @@ export class OrderController {
   }
 
   async getAllOrders() {
-    return await this.orderUserCase.getAll();
+    try {
+      return await this.orderUserCase.getAll();
+    } catch (error) {
+      this.logger.error(`Failed to get all orders: ${error.message || error}`);
+      throw error;
+    }
+  }
+
+  async updateOrder(dto: UpdateOrderDto) {
+    try {
+      this.logger.log(`Updating order with id: ${dto.id}`);
+      return await this.orderUserCase.updateOrder(dto.id, dto.status);
+    } catch (error) {
+      this.logger.error(`Failed to update order: ${error.message || error}`);
+      throw error;
+    }
   }
 }

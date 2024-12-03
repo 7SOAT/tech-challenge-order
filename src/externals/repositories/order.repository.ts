@@ -22,7 +22,6 @@ export class OrderRepository {
         .findOne()
         .sort({ createdAt: -1 });
 
-      console.log(products.map((product) => String(product.id)));
       const response = await this.orderSchema.create({
         status: 'pending',
         totalValue: totalValue,
@@ -45,5 +44,28 @@ export class OrderRepository {
 
   async getAllOrders() {
     return await this.orderSchema.find();
+  }
+
+  async updateOrder(id: string, status: string) {
+    try {
+      const response = await this.orderSchema.updateOne(
+        { _id: id },
+        { status: status, updatedAt: new Date() },
+      );
+
+      if (response.matchedCount === 0) {
+        throw new Error(`Order with id ${id} not found.`);
+      }
+
+      if (response.modifiedCount === 0) {
+        throw new Error(`Order with id ${id} was not updated.`);
+      }
+
+      const order = await this.orderSchema.findOne({ _id: id });
+
+      return order;
+    } catch (error) {
+      throw error;
+    }
   }
 }

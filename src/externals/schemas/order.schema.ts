@@ -1,4 +1,5 @@
 import { Document, Schema } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface OrderDocument extends Document {
   status: string;
@@ -13,6 +14,10 @@ export interface OrderDocument extends Document {
 
 export const OrderSchema = new Schema(
   {
+    _id: {
+      type: Schema.Types.String,
+      default: uuidv4,
+    },
     status: { type: Schema.Types.String, ref: 'OrderStatus' },
     totalValue: Number,
     products: [{ type: Schema.Types.String, ref: 'Product' }],
