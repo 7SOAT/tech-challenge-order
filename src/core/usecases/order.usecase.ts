@@ -58,7 +58,7 @@ export class OrderUseCase {
     }
   }
 
-  async updateOrder(id: string, status: string) {
+  async updateOrder(id: string, status: number) {
     const response = await this.orderGateway.updateOrder(id, status);
 
     this.logger.log(`Order updated with id ${response._id}`);

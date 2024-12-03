@@ -23,7 +23,7 @@ export class OrderRepository {
         .sort({ createdAt: -1 });
 
       const response = await this.orderSchema.create({
-        status: 'pending',
+        status: 0,
         totalValue: totalValue,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -50,7 +50,7 @@ export class OrderRepository {
     return await this.orderSchema.find();
   }
 
-  async updateOrder(id: string, status: string) {
+  async updateOrder(id: string, status: number) {
     try {
       const response = await this.orderSchema.updateOne(
         { _id: id },

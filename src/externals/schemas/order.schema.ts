@@ -18,7 +18,7 @@ export const OrderSchema = new Schema(
       type: Schema.Types.String,
       default: uuidv4,
     },
-    status: { type: Schema.Types.String, ref: 'OrderStatus' },
+    status: { type: Schema.Types.Number, ref: 'OrderStatus' },
     totalValue: Number,
     products: [{ type: Schema.Types.String, ref: 'Product' }],
     customer: {

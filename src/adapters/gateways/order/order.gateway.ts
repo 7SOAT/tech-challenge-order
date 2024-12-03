@@ -47,7 +47,7 @@ export class OrderGateway {
     }
   }
 
-  async updateOrder(id: string, status: string) {
+  async updateOrder(id: string, status: number) {
     try {
       const result = await this._orderRepository.updateOrder(id, status);
 

@@ -7,6 +7,6 @@ export class UpdateOrderDto {
   id: string;
 
   @IsNotEmpty()
-  @ApiProperty({ type: 'string', description: 'Order status' })
-  status: string;
+  @ApiProperty({ type: 'number', description: 'Order status' })
+  status: number;
 }
