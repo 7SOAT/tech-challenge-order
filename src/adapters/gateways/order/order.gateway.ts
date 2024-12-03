@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OrderRepository } from '../../../externals/repositories/order.repository';
 import { plainToClass } from 'class-transformer';
-import { UpdateOrderResponseDto } from 'src/api/dto/response/update-order.dto';
+import { UpdateOrderResponseDto } from '../../../../src/api/dto/response/update-order.dto';
 
 @Injectable()
 export class OrderGateway {
