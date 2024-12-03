@@ -17,9 +17,10 @@ export class MicroServiceService {
 
   async getAllProducts(): Promise<Array<ProductsResponseDto>> {
     try {
-      const url = 'http://localhost:3000/products';
       const { data } = await lastValueFrom(
-        this.httpService.get<Array<ProductsResponseDto>>(url),
+        this.httpService.get<Array<ProductsResponseDto>>(
+          `${this.configService.get<string>('API_ADMIN_HOST')}/products`,
+        ),
       );
 
       if (!data) {
