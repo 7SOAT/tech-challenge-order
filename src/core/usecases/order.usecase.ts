@@ -48,15 +48,13 @@ export class OrderUseCase {
         );
       }
 
+      this.logger.log(`Orders found: ${order._id}`);
       return order;
     } catch (error) {
       this.logger.error(
-        `Failed to fetch data from microservice: ${error.message || error}`,
+        `Failed to get order by Id: ${JSON.stringify(error.message || error)}`,
       );
-      throw new HttpException(
-        `Failed to fetch data from microservice: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 
