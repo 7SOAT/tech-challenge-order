@@ -42,6 +42,7 @@ export class OrderGateway {
       const result = await this._orderRepository.getOrder(id);
       return result;
     } catch (error) {
+      this.logger.error(`Failed to get order by Id: ${error.message || error}`);
       throw error;
     }
   }

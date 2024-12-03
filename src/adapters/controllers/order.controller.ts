@@ -3,7 +3,7 @@ import { CreateOrderDto } from '../../api/dto/order/create-order.dto';
 import { OrderUseCase } from '../../core/usecases/order.usecase';
 import { MicroServiceService } from '../../microservice/microservice.service';
 import { JwtHelperService } from '../../package/jwt-helper/jwt-helper.service';
-import { UpdateOrderDto } from 'src/api/dto/order/update-order.dto';
+import { UpdateOrderDto } from '../../api/dto/order/update-order.dto';
 
 @Injectable()
 export class OrderController {
@@ -42,7 +42,12 @@ export class OrderController {
   }
 
   async getOrder(id: string) {
-    return await this.orderUserCase.getOrderById(id);
+    try {
+      return await this.orderUserCase.getOrderById(id);
+    } catch (error) {
+      this.logger.error(`Failed to get order: ${error.message || error}`);
+      throw error;
+    }
   }
 
   async getAllOrders() {

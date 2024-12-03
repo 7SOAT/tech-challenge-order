@@ -39,7 +39,11 @@ export class OrderRepository {
   }
 
   async getOrder(id: string) {
-    return await this.orderSchema.findOne({ _id: id });
+    try {
+      return await this.orderSchema.findOne({ _id: id });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getAllOrders() {

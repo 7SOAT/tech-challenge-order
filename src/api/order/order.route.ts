@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -39,11 +38,7 @@ export class OrderRoute {
   @ApiNotFoundResponse({ description: 'Order not found' })
   async get(@Param('id') id: string) {
     try {
-      const order = await this._orderController.getOrder(id);
-
-      if (!order) throw new NotFoundException(`Order with id ${id} not found`);
-
-      return order;
+      return await this._orderController.getOrder(id);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

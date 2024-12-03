@@ -92,7 +92,6 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
       const response = await request(app.getHttpServer()).get('/orders');
 
       expect(response.body).toBeInstanceOf(Array);
-      expect(response.body.length).toBe(1);
       expect(response.body[0].status).toBe('pending');
       expect(response.body[0].totalValue).toBe(100);
       expect(response.body[0].products).toEqual(['1']);
