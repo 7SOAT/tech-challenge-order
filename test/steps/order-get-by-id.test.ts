@@ -147,7 +147,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
 
       then('the response status code should be 500', async () => {
         const response = await request(app.getHttpServer()).get(
-          '/orders/c65a5554-bdcf-447a-b5e2-bb06e6aa94b7',
+          '/orders/a461f1df-65a7-411c-87d1-a66e6656b44c',
         );
 
         expect(response.status).toBe(500);
