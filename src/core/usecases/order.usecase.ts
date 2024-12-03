@@ -30,12 +30,9 @@ export class OrderUseCase {
       return orders;
     } catch (error) {
       this.logger.error(
-        `Failed to fetch data from microservice: ${error.message || error}`,
+        `Failed to get all orders: ${JSON.stringify(error.message || error)}`,
       );
-      throw new HttpException(
-        `Failed to fetch data from microservice: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 
@@ -61,5 +58,12 @@ export class OrderUseCase {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async updateOrder(id: string, status: string) {
+    const response = await this.orderGateway.updateOrder(id, status);
+
+    this.logger.log(`Order updated with id ${response._id}`);
+    return response;
   }
 }

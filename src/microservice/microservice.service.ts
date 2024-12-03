@@ -45,7 +45,7 @@ export class MicroServiceService {
 
       const { data } = await firstValueFrom(
         this.httpService.post<{ token: any }>(URL_CUSTOMERS_BY_DOCUMENT, {
-          cpf: document,
+          cpf: document ? document : 'tech-challenge-order',
         }),
       );
 

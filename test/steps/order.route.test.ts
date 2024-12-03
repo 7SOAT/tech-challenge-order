@@ -125,9 +125,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
     then('the response should contain "No orders found"', async () => {
       const response = await request(app.getHttpServer()).get('/orders');
 
-      expect(response.body.message).toBe(
-        'Failed to fetch data from microservice: No orders found',
-      );
+      expect(response.body.message).toBe('No orders found');
     });
   });
 });
