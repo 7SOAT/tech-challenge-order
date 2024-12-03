@@ -74,7 +74,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
           products: ['1'],
           customer: '1',
           payment: 'CreditCard',
-          orderNumber: 1,
+          orderNumber: 2,
         });
       },
     );
@@ -129,7 +129,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
             products: ['1'],
             customer: '1',
             payment: 'CreditCard',
-            orderNumber: 2,
+            orderNumber: 3,
           });
         },
       );
