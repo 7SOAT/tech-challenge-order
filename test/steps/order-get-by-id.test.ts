@@ -69,7 +69,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
 
         await orderModel.create({
           _id: 'd072c976-ccf5-4ad1-9d06-513941213e62',
-          status: 'pending',
+          status: 0,
           totalValue: 100,
           products: ['1'],
           customer: '1',
@@ -104,7 +104,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
       );
 
       expect(response.body).toBeDefined();
-      expect(response.body.status).toBe('pending');
+      expect(response.body.status).toBe(0);
       expect(response.body.totalValue).toBe(100);
       expect(response.body.products).toEqual(['1']);
       expect(response.body.customer).toBe('1');
@@ -124,7 +124,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
 
           await orderModel.create({
             _id: '120da061-4254-4bdd-97c0-b7f178bef94e',
-            status: 'pending',
+            status: 0,
             totalValue: 100,
             products: ['1'],
             customer: '1',

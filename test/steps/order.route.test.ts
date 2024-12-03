@@ -67,7 +67,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
       ) as Model<OrderDocument>;
 
       await orderModel.create({
-        status: 'pending',
+        status: 0,
         totalValue: 100,
         products: ['1'],
         customer: '1',
@@ -92,7 +92,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
       const response = await request(app.getHttpServer()).get('/orders');
 
       expect(response.body).toBeInstanceOf(Array);
-      expect(response.body[0].status).toBe('pending');
+      expect(response.body[0].status).toBe(0);
       expect(response.body[0].totalValue).toBe(100);
       expect(response.body[0].products).toEqual(['1']);
       expect(response.body[0].customer).toBe('1');
