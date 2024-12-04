@@ -32,7 +32,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
           SONAR_PROJECT_KEY: 7SOAT_tech-challenge-payments
           SONAR_ORGANIZATION: 7soat
           SONAR_SCANNER_OPTS: "-Dsonar.javascript.lcov.reportPaths=/coverage/lcov.info"

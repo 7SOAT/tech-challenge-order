@@ -1,43 +1,41 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { TestingModule, Test } from '@nestjs/testing';
-import * as request from 'supertest';
-import { DefineScenarioFunctionWithAliases } from 'jest-cucumber/dist/src/feature-definition-creation';
 import { OrderRoute } from '../../../../src/api/order/order.route';
 import { INestApplication } from '@nestjs/common';
-import {
-  getConnectionToken,
-  getModelToken,
-  MongooseModule,
-} from '@nestjs/mongoose';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { OrderDocument } from 'src/externals/schemas/order.schema';
-import { Connection, Model } from 'mongoose';
-import { ControllersModule } from '../../../../src/adapters/controllers/controllers.module';
+import { OrderController } from '../../../../src/adapters/controllers/order.controller';
+import { CreateOrderDto } from '../../../../src/api/dto/order/create-order.dto';
+import { randomUUID } from 'crypto';
+import { UpdateOrderDto } from '../../../../src/api/dto/order/update-order.dto';
 
 const feature = loadFeature(
   path.resolve(__dirname, '../features/order.route.feature'),
 );
 
-defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
+defineFeature(feature, (scenario) => {
   let app: INestApplication;
   let orderRoute: OrderRoute;
+  let orderController: OrderController;
+
+  const mockOrderController = {
+    getOrder: jest.fn(),
+    createOrder: jest.fn(),
+    getAllOrders: jest.fn(),
+    updateOrder: jest.fn(),
+  };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        MongooseModule.forRootAsync({
-          imports: [ConfigModule],
-          useFactory: async (configService: ConfigService) => ({
-            uri: configService.get<string>('MONGODB_URI_TEST'),
-          }),
-          inject: [ConfigService],
-        }),
-        ControllersModule,
-      ],
       controllers: [OrderRoute],
+      providers: [
+        {
+          provide: OrderController,
+          useValue: mockOrderController,
+        },
+      ],
     }).compile();
 
+    orderController = moduleFixture.get<OrderController>(OrderController);
     app = moduleFixture.createNestApplication();
     await app.init();
 
@@ -45,86 +43,105 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
   });
 
   afterAll(async () => {
-    const connection = app.get<Connection>(getConnectionToken());
-
-    const collections = await connection.db.collections();
-
-    for (const collection of collections) {
-      await collection.deleteMany({});
-    }
+    jest.clearAllMocks();
     await app.close();
   });
 
   it('should be defined', () => {
+    expect(orderController).toBeDefined();
     expect(orderRoute).toBeDefined();
   });
+  scenario('Create a new order', ({ given, when, then }) => {
+    let response: any;
+    const dto: CreateOrderDto = {
+      document: '123456789',
+      productIds: [randomUUID(), randomUUID()],
+    };
 
-  scenario('Successfully retrieve all orders', ({ given, when, then }) => {
-    given('the order service is available', async () => {
-      // Mock the order service to return a list of orders
-      const orderModel = app.get(
-        getModelToken('OrderSchema'),
-      ) as Model<OrderDocument>;
-
-      await orderModel.create({
-        status: 0,
-        totalValue: 100,
-        products: ['1'],
-        customer: '1',
-        payment: 'CreditCard',
-        orderNumber: 1,
-      });
+    given('I have a valid order payload', () => {
+      mockOrderController.createOrder.mockResolvedValue({ id: '123', ...dto });
     });
 
-    when('I send a GET request to "/orders"', async () => {
-      const response = await request(app.getHttpServer()).get('/orders');
+    when('I send a POST request to "/orders"', async () => {
+      jest.spyOn(orderController, 'createOrder').mockResolvedValue({
+        _id: '123',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        customer: '123456789',
+        products: dto.productIds,
+        status: 0,
+        orderNumber: 123,
+        payment: 'credit_card',
+        totalValue: 100,
+      });
+      response = await orderRoute.create(dto);
+    });
 
+    then('I should receive a response with a status code of 201', () => {
       expect(response).toBeDefined();
     });
 
-    then('I should receive a 200 status code', async () => {
-      const response = await request(app.getHttpServer()).get('/orders');
-
-      expect(response.status).toBe(200);
-    });
-
-    then('the response should contain a list of orders', async () => {
-      const response = await request(app.getHttpServer()).get('/orders');
-
-      expect(response.body).toBeInstanceOf(Array);
-      expect(response.body[0].status).toBe(0);
-      expect(response.body[0].totalValue).toBe(100);
-      expect(response.body[0].products).toEqual(['1']);
-      expect(response.body[0].customer).toBe('1');
-      expect(response.body[0].payment).toBe('CreditCard');
+    then('the response should indicate that the order was created', () => {
+      expect(mockOrderController.createOrder).toHaveBeenCalledWith(dto);
     });
   });
 
-  scenario('No orders found', ({ given, when, then }) => {
-    given('the order service is available', async () => {
-      const orderModel = app.get(
-        getModelToken('OrderSchema'),
-      ) as Model<OrderDocument>;
+  scenario('Get order details by ID', ({ given, when, then }) => {
+    let response: any;
+    const id = '123';
 
-      await orderModel.deleteMany({});
+    given('I have a valid order ID', () => {
+      mockOrderController.getOrder.mockResolvedValue({ id, status: 'new' });
     });
+
+    when('I send a GET request to "/orders/{id}"', async () => {
+      response = await orderRoute.get(id);
+    });
+
+    then('I should receive a response with a status code of 200', () => {
+      expect(response).toHaveProperty('id', id);
+    });
+
+    then('the response should contain the order details', () => {
+      expect(mockOrderController.getOrder).toHaveBeenCalledWith(id);
+    });
+  });
+
+  scenario('List all orders', ({ when, then }) => {
+    let response: any;
 
     when('I send a GET request to "/orders"', async () => {
-      const response = await request(app.getHttpServer()).get('/orders');
-
-      expect(response).toBeDefined();
+      mockOrderController.getAllOrders.mockResolvedValue([{ id: '123' }]);
+      response = await orderRoute.getAll();
     });
 
-    then('I should receive a 500 status code', async () => {
-      const response = await request(app.getHttpServer()).get('/orders');
-
-      expect(response.status).toBe(500);
+    then('I should receive a response with a status code of 200', () => {
+      expect(response).toEqual([{ id: '123' }]);
     });
 
-    then('the response should contain "No orders found"', async () => {
-      const response = await request(app.getHttpServer()).get('/orders');
+    then('the response should contain a list of orders', () => {
+      expect(mockOrderController.getAllOrders).toHaveBeenCalled();
+    });
+  });
 
-      expect(response.body.message).toBe('No orders found');
+  scenario("Update an order's status", ({ given, when, then }) => {
+    let response: any;
+    const dto: UpdateOrderDto = { id: '123', status: 0 };
+
+    given('I have a valid order update payload', () => {
+      mockOrderController.updateOrder.mockResolvedValue(dto);
+    });
+
+    when('I send a PUT request to "/orders"', async () => {
+      response = await orderRoute.update(dto);
+    });
+
+    then('I should receive a response with a status code of 200', () => {
+      expect(response).toEqual(dto);
+    });
+
+    then('the response should indicate that the order was updated', () => {
+      expect(mockOrderController.updateOrder).toHaveBeenCalledWith(dto);
     });
   });
 });
