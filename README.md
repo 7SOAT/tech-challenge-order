@@ -71,3 +71,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+## Sonar
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=7SOAT_tech-challenge-order&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=7SOAT_tech-challenge-order)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=7SOAT_tech-challenge-order&metric=coverage)](https://sonarcloud.io/summary/new_code?id=7SOAT_tech-challenge-order)
