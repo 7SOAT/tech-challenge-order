@@ -28,15 +28,13 @@ export class MicroServiceService {
         throw new HttpException('Products not found', HttpStatus.NOT_FOUND);
       }
 
+      this.logger.log(`Products found`);
       return data;
     } catch (error) {
       this.logger.error(
         `Failed to fetch data from microservice: ${error.message || error}`,
       );
-      throw new HttpException(
-        `Failed to fetch data from microservice: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 
@@ -55,15 +53,13 @@ export class MicroServiceService {
         throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
       }
 
+      this.logger.log(`Customer found`);
       return data;
     } catch (error) {
       this.logger.error(
         `Failed to fetch data from microservice: ${JSON.stringify(error.message || error)}`,
       );
-      throw new HttpException(
-        `Failed to fetch data from microservice: ${JSON.stringify(error.message || error)}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw error;
     }
   }
 
@@ -88,12 +84,13 @@ export class MicroServiceService {
         throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
       }
 
+      this.logger.log(`Product with id: ${id} found`);
       return data;
     } catch (error) {
-      throw new HttpException(
+      this.logger.error(
         `Failed to fetch data from microservice: ${JSON.stringify(error.message || error)}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
       );
+      throw error;
     }
   }
 }

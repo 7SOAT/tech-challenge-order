@@ -3,7 +3,7 @@ import * as path from 'path';
 import { TestingModule, Test } from '@nestjs/testing';
 import * as request from 'supertest';
 import { DefineScenarioFunctionWithAliases } from 'jest-cucumber/dist/src/feature-definition-creation';
-import { OrderRoute } from '../../src/api/order/order.route';
+import { OrderRoute } from '../../../../src/api/order/order.route';
 import { INestApplication } from '@nestjs/common';
 import {
   getConnectionToken,
@@ -13,7 +13,7 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrderDocument } from 'src/externals/schemas/order.schema';
 import { Connection, Model } from 'mongoose';
-import { ControllersModule } from '../../src/adapters/controllers/controllers.module';
+import { ControllersModule } from '../../../../src/adapters/controllers/controllers.module';
 
 const feature = loadFeature(
   path.resolve(__dirname, '../features/order.route.feature'),

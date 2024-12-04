@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OrderRepository } from '../../../externals/repositories/order.repository';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { UpdateOrderResponseDto } from '../../../../src/api/dto/response/update-order.dto';
+import { CreateOrderResponseDto } from '../../../../src/api/dto/response/create-order.dto';
 
 @Injectable()
 export class OrderGateway {
@@ -16,7 +17,12 @@ export class OrderGateway {
         customer,
         products,
       );
-      return result;
+
+      const createOrderDto = plainToInstance(CreateOrderResponseDto, result, {
+        excludeExtraneousValues: true,
+      });
+
+      return createOrderDto;
     } catch (error) {
       this.logger.error(`Failed to create order: ${error.message || error}`);
       throw error;
@@ -27,11 +33,15 @@ export class OrderGateway {
     try {
       const result = await this._orderRepository.getAllOrders();
 
+      const responseOrders = plainToInstance(CreateOrderResponseDto, result, {
+        excludeExtraneousValues: true,
+      });
+
       this.logger.log(`Orders found: ${result.length}`);
-      return result;
+      return responseOrders;
     } catch (error) {
       this.logger.error(
-        `Failed to fetch data from microservice: ${error.message || error}`,
+        `Error occurred when get all orders: ${error.message || error}`,
       );
       throw error;
     }
@@ -40,7 +50,10 @@ export class OrderGateway {
   async findById(id: string) {
     try {
       const result = await this._orderRepository.getOrder(id);
-      return result;
+      const createOrderDto = plainToInstance(CreateOrderResponseDto, result, {
+        excludeExtraneousValues: true,
+      });
+      return createOrderDto;
     } catch (error) {
       this.logger.error(`Failed to get order by Id: ${error.message || error}`);
       throw error;
@@ -51,7 +64,9 @@ export class OrderGateway {
     try {
       const result = await this._orderRepository.updateOrder(id, status);
 
-      const updateOrderDto = plainToClass(UpdateOrderResponseDto, result);
+      const updateOrderDto = plainToInstance(UpdateOrderResponseDto, result, {
+        excludeExtraneousValues: true,
+      });
 
       return updateOrderDto;
     } catch (error) {
