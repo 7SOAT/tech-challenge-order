@@ -14,6 +14,7 @@ import { Connection, Model } from 'mongoose';
 import { OrderDocument } from '../../../../src/externals/schemas/order.schema';
 import * as request from 'supertest';
 import { DefineScenarioFunctionWithAliases } from 'jest-cucumber/dist/src/feature-definition-creation';
+import { randomUUID } from 'crypto';
 
 const feature = loadFeature(
   path.resolve(__dirname, '../features/order-get-by-id.route.feature'),
@@ -147,7 +148,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
 
       then('the response status code should be 500', async () => {
         const response = await request(app.getHttpServer()).get(
-          '/orders/a461f1df-65a7-411c-87d1-a66e6656b44c',
+          `/orders/${randomUUID()}`,
         );
 
         expect(response.status).toBe(500);
@@ -157,7 +158,7 @@ defineFeature(feature, (scenario: DefineScenarioFunctionWithAliases) => {
         'the response should contain an error message "Order not found"',
         async () => {
           const response = await request(app.getHttpServer()).get(
-            '/orders/c65a5554-bdcf-447a-b5e2-bb06e6aa94b7',
+            `/orders/${randomUUID()}`,
           );
 
           expect(response.status).toBe(500);
