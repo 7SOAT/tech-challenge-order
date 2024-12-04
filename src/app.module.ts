@@ -6,6 +6,7 @@ import { RepositoryModule } from './externals/repositories/repository.module';
 import { RouteModule } from './api/route.module';
 import { ControllersModule } from './adapters/controllers/controllers.module';
 import { OrderRoute } from './api/order/order.route';
+import { HealthcheckModule } from './api/healthcheck/healthcheck.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { OrderRoute } from './api/order/order.route';
       exports: [],
     }),
     MicroserviceModule,
+    HealthcheckModule,
   ],
   controllers: [],
   providers: [],
