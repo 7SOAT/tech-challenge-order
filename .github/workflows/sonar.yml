@@ -61,3 +61,7 @@ jobs:
           SONAR_PROJECT_KEY: 7SOAT_tech-challenge-order
           SONAR_ORGANIZATION: 7soat
           SONAR_SCANNER_OPTS: "-Dsonar.javascript.lcov.reportPaths=/coverage/lcov.info"
+
+      - name: MongoDB Logs
+        if: failure()
+        run: docker logs ${{ job.services.mongodb.id }}
