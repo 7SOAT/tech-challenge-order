@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
-import { OrderRoute } from '../../src/api/order/order.route';
-import { ControllersModule } from '../../src/adapters/controllers/controllers.module';
+import { OrderRoute } from '../../../../src/api/order/order.route';
+import { ControllersModule } from '../../../../src/adapters/controllers/controllers.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {
   getConnectionToken,
@@ -11,7 +11,7 @@ import {
 } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Connection, Model } from 'mongoose';
-import { OrderDocument } from '../../src/externals/schemas/order.schema';
+import { OrderDocument } from '../../../../src/externals/schemas/order.schema';
 import * as request from 'supertest';
 import { DefineScenarioFunctionWithAliases } from 'jest-cucumber/dist/src/feature-definition-creation';
 

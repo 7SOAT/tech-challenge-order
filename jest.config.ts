@@ -8,6 +8,14 @@ const config: Config = {
     '^.+\\.ts?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    'src/externals/repositories/',
+    'src/core/',
+    'src/adapters/gateways/',
+    'src/microservice/',
+    'src/main.ts',
+  ],
 };
 
 export default config;
