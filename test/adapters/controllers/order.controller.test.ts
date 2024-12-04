@@ -121,6 +121,25 @@ describe('OrderController', () => {
     expect(result).toEqual(order);
   });
 
+  it('should throw an error when create order fails', async () => {
+    const createOrderDto: CreateOrderDto = {
+      productIds: [
+        '11111-11111-11111-11111-11111',
+        '22222-22222-22222-22222-22222',
+      ],
+      document: '12345678910',
+    };
+
+    jest
+      .spyOn(microService, 'getCustomerByDocument')
+      .mockRejectedValue(new Error('Error'));
+    try {
+      await orderController.createOrder(createOrderDto);
+    } catch (error) {
+      expect(error.message).toBe('Error');
+    }
+  });
+
   it('should get an order by id', async () => {
     const orderId = 'orderId';
     const order = {
@@ -138,6 +157,18 @@ describe('OrderController', () => {
     jest.spyOn(orderUseCase, 'getOrderById').mockResolvedValue(order);
     const result = await orderController.getOrder(orderId);
     expect(result).toEqual(order);
+  });
+
+  it('should throw an error when get order fails', async () => {
+    const orderId = 'orderId';
+    jest
+      .spyOn(orderUseCase, 'getOrderById')
+      .mockRejectedValue(new Error('Error'));
+    try {
+      await orderController.getOrder(orderId);
+    } catch (error) {
+      expect(error.message).toBe('Error');
+    }
   });
 
   it('should get all orders', async () => {
@@ -163,6 +194,15 @@ describe('OrderController', () => {
     expect(result).toEqual(orders);
   });
 
+  it('should throw an error when get all orders fails', async () => {
+    jest.spyOn(orderUseCase, 'getAll').mockRejectedValue(new Error('Error'));
+    try {
+      await orderController.getAllOrders();
+    } catch (error) {
+      expect(error.message).toBe('Error');
+    }
+  });
+
   it('should update an order', async () => {
     const dto = {
       id: 'orderId',
@@ -186,6 +226,22 @@ describe('OrderController', () => {
     const result = await orderController.updateOrder(dto);
 
     expect(result).toEqual(order);
+  });
+
+  it('should throw an error when update order fails', async () => {
+    const dto = {
+      id: 'orderId',
+      status: 1,
+    };
+
+    jest
+      .spyOn(orderUseCase, 'updateOrder')
+      .mockRejectedValue(new Error('Error'));
+    try {
+      await orderController.updateOrder(dto);
+    } catch (error) {
+      expect(error.message).toBe('Error');
+    }
   });
 
   it('should throw an error when create order fails', async () => {
