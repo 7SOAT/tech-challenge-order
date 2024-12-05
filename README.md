@@ -7,6 +7,16 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=7SOAT_tech-challenge-order&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=7SOAT_tech-challenge-order)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=7SOAT_tech-challenge-order&metric=coverage)](https://sonarcloud.io/summary/new_code?id=7SOAT_tech-challenge-order)
 
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+<h2 id="quality-gate"> 📃 Description </h2>
+
+<p align="justify">
+  Esse projeto consiste na criação de um microsserviço com as responsabilidades de criar e alterar os pedidos.
+</p>
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
 <h2 id="requisitos"> 📃 Dependências</h2>
 
 <p align="justify">
