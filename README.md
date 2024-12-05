@@ -1,79 +1,61 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+<h1 align="center"> Tech Challenge Orders 📋</h1>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ yarn
-```
-
-## Running the app
-
-```bash
-# development
-$ yarn start
-
-# watch mode
-$ yarn start:dev
-
-# production mode
-$ yarn start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ yarn test
-
-# e2e tests
-$ yarn test:e2e
-
-# test coverage
-$ yarn test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
-
-
-## Sonar
+<h2 id="quality-gate"> 🧪 Quality Gate </h2>
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=7SOAT_tech-challenge-order&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=7SOAT_tech-challenge-order)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=7SOAT_tech-challenge-order&metric=coverage)](https://sonarcloud.io/summary/new_code?id=7SOAT_tech-challenge-order)
+
+<h2 id="requisitos"> 📃 Dependências</h2>
+
+<p align="justify">
+  Para rodar o projeto localmente, primeiro você precisa se certificar que possui essas ferramentas insaladas:
+</p>
+
+* [NodeJS e NPM](https://nodejs.org/en)
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<h2 id="requisitos"> ⚙️ Rodando o projeto</h2>
+
+<ol start="1">
+  <li>
+    <h3>Clonando o repositório</h3>
+
+    git clone https://github.com/7SOAT/tech-challenge-order.git
+    cd tech-challenge-order
+  </li>
+  <li>
+    <h3>Instalar bibliotecas</h3>
+    <p>Para instalar as bibliotecas, abra o terminal na raiz do projeto e execute o seguinte comando:</p>
+
+    npm install
+  </li>
+  <li>
+    <h3>Rodar instâncias no Docker</h3>
+    <p>Para rodar as instâncias do banco e da aplicação no Docker, a maneira mais simples é utilizar a extensão do VSCode, explicada no gif abaixo:</p>
+    <img src="https://code.visualstudio.com/assets/docs/containers/overview/select-subset.gif">
+    <p>Ou se preferir pode ser feito pelo terminal com:</p>
+    <p> - Para windows:</p>
+
+      docker-compose up --build
+
+   <p> - Para Linux/macOS</p>
+
+     docker compose up --build
+  </li>
+  <li>Subindo a imagem, o projeto já estará pronto para receber requisições através do Postman ou Insomnia</li>
+</ol>
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+[![Acesse o Miro](https://cdn.prod.website-files.com/628e6648a47e6727d5c69a2a/62d856b5e550362034ed205f_miro%20logo.png)](https://miro.com/welcomeonboard/M3R3Z0xXNFFwb200QTZueWZENjRrdXdRS0NQdzFwdzF1SFNCTHNYTmttMi9GOGZ6cmVOQmJoWWZhUGlKOFZkWnNKYWxrLzFIYlBldUxnT0VlTWoxRFJUclJ5YlBiU1IycHc5Smpnb0h1a0d0ZlJheWZ3ZTJhcU1HZjRPRjdtMmkhZQ==?share_link_id=370719952948)
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+<h2 id="requisitos"> 👤 Integrantes</h2>
+
+[<img src="https://avatars.githubusercontent.com/u/76217994?v=4" width=115 > <br> <sub> Aureo Alexandre </sub>](https://github.com/Aureo-Bueno) | [<img src="https://avatars.githubusercontent.com/u/97612275?v=4" width=115 > <br> <sub> Fauze Cavalari </sub>](https://github.com/devfauze) | [<img src="https://avatars.githubusercontent.com/u/53823656?v=4" width=115 > <br> <sub> Gabriella Andrade </sub>](https://github.com/GabiAndradeD) | [<img src="https://avatars.githubusercontent.com/u/61785785?v=4" width=115 > <br> <sub> Luiz H. L. Paino </sub>](https://github.com/luizhlpaino) |
+| :---: | :---: | :---: | :---: |
+
+
