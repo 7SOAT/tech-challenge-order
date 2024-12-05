@@ -23,7 +23,7 @@
     <h3>Clonando o repositório</h3>
 
     git clone https://github.com/7SOAT/tech-challenge-order.git
-    cd tech-challenge-production
+    cd tech-challenge-order
   </li>
   <li>
     <h3>Instalar bibliotecas</h3>
